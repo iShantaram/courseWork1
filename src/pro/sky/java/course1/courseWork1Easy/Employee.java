@@ -3,7 +3,7 @@ package pro.sky.java.course1.courseWork1Easy;
 import java.util.Objects;
 
 public class Employee {
-    static int counter;
+    public static int counter;
 
     private final String name;
     private int salary;
