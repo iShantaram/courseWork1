@@ -19,16 +19,16 @@ public class CourseWork1Hard {
 
         printData();
         System.out.println("Общая зарплата сотрудников в месяц: " + totalSalary());
-        System.out.println("Сотрудник с минимальной зарплатой: " + minSalary());
-        System.out.println("Сотрудник с максимальной зарплатой: " + maxSalary());
+        System.out.println("Сотрудник с минимальной зарплатой: " + minSalaryEmployee());
+        System.out.println("Сотрудник с максимальной зарплатой: " + maxSalaryEmployee());
         System.out.println("Средняя зарплата сотрудников: " + avgSalary());
         printNames();
         indexSalary(25);
 
         int department = 3;
         indexSalary(-20, department);
-        System.out.println("Сотрудник с минимальной зарплатой в отделе " + department + ": " + minSalary(department));
-        System.out.println("Сотрудник с максимальной зарплатой в отделе " + department + ": " + maxSalary(department));
+        System.out.println("Сотрудник с минимальной зарплатой в отделе " + department + ": " + minSalaryEmployee(department));
+        System.out.println("Сотрудник с максимальной зарплатой в отделе " + department + ": " + maxSalaryEmployee(department));
         System.out.println("Общая месячная зарплата сотрудников в отделе " + department + ": " + totalSalary(department));
         System.out.println("Средняя зарплата сотрудников в отделе " + department + ": " + avgSalary(department));
         System.out.println("\nСотрудники отдела " + department + ":\n" + getData(department));
@@ -46,7 +46,7 @@ public class CourseWork1Hard {
         }
     }
 
-    private static Employee minSalary() {
+    private static Employee minSalaryEmployee() {
         if (Employee.counter > 0) {
             int j = 0;
             while (j < employees.length) {
@@ -68,7 +68,7 @@ public class CourseWork1Hard {
         }
     }
 
-    private static Employee maxSalary() {
+    private static Employee maxSalaryEmployee() {
         if (Employee.counter > 0) {
             int j = 0;
             while (j < employees.length) {
@@ -184,7 +184,11 @@ public class CourseWork1Hard {
                 countEmployeesOnDepartment++;
             }
         }
-        return totalSalary(department)/countEmployeesOnDepartment;
+        if (countEmployeesOnDepartment > 0) {
+            return totalSalary(department) / countEmployeesOnDepartment;
+        } else {
+            return 0;
+        }
     }
 
     private static int totalSalary(int department) {
@@ -197,7 +201,7 @@ public class CourseWork1Hard {
         return totalSalary;
     }
 
-    private static Employee maxSalary(int department) {
+    private static Employee maxSalaryEmployee(int department) {
         if (Employee.counter > 0) {
             int j = 0;
             while (j < employees.length) {
@@ -216,7 +220,7 @@ public class CourseWork1Hard {
         }
     }
 
-    private static Employee minSalary(int department) {
+    private static Employee minSalaryEmployee(int department) {
         if (Employee.counter > 0) {
             int j = 0;
             while (j < employees.length) {
