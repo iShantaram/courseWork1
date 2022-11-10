@@ -17,88 +17,95 @@ public class CourseWork1Hard {
         employees[7] = new Employee("Ivanov7 Ivan Ivanovich", 4, 225000);
         employees[8] = new Employee("Ivanov9 Ivan Ivanovich", 4, 235000);
 
-        printData();
-        System.out.println("Общая зарплата сотрудников в месяц: " + calculateTotalSalary());
-        System.out.println("Сотрудник с минимальной зарплатой: " + findMinSalaryEmployee());
-        System.out.println("Сотрудник с максимальной зарплатой: " + findMaxSalaryEmployee());
-        System.out.println("Средняя зарплата сотрудников: " + calculateAvgSalary());
-        printNames();
-        indexSalary(25);
+        printData(employees);
+        System.out.println("Общая зарплата сотрудников в месяц: " + calculateTotalSalary(employees));
+        System.out.println("Сотрудник с минимальной зарплатой: " + findMinSalaryEmployee(employees));
+        System.out.println("Сотрудник с максимальной зарплатой: " + findMaxSalaryEmployee(employees));
+        System.out.println("Средняя зарплата сотрудников: " + calculateAvgSalary(employees));
+        printNames(employees);
+        indexSalary(25, employees);
 
         int department = 3;
-        indexSalary(-20, department);
-        System.out.println("Сотрудник с минимальной зарплатой в отделе " + department + ": " + findMinSalaryEmployee(department));
-        System.out.println("Сотрудник с максимальной зарплатой в отделе " + department + ": " + findMaxSalaryEmployee(department));
-        System.out.println("Общая месячная зарплата сотрудников в отделе " + department + ": " + calculateTotalSalary(department));
-        System.out.println("Средняя зарплата сотрудников в отделе " + department + ": " + calculateAvgSalary(department));
-        System.out.println("\nСотрудники отдела " + department + ":\n" + getData(department));
+        indexSalary(-20, findEmployeesOnDepartment(employees, department));
+        System.out.println("Сотрудник с минимальной зарплатой в отделе " + department + ": " +
+                findMinSalaryEmployee(findEmployeesOnDepartment(employees, department)));
+        System.out.println("Сотрудник с максимальной зарплатой в отделе " + department + ": " +
+                findMaxSalaryEmployee(findEmployeesOnDepartment(employees, department)));
+        System.out.println("Общая месячная зарплата сотрудников в отделе " + department + ": " +
+                calculateTotalSalary(findEmployeesOnDepartment(employees, department)));
+        System.out.println("Средняя зарплата сотрудников в отделе " + department + ": " +
+                calculateAvgSalary(findEmployeesOnDepartment(employees, department)));
+        System.out.println("\nСотрудники отдела " + department + ":\n" + getData(findEmployeesOnDepartment(employees, department)));
 
         int compareSalary = 200000;
         System.out.println("Сотрудники с зарплатой выше или равной " + compareSalary + ":\n" + toString(getEmployeesMoreSalary(compareSalary)));
         System.out.println("Сотрудники с зарплатой ниже " + compareSalary + ":\n" + toString(getEmployeesLessSalary(compareSalary)));
     }
 
-    private static int calculateAvgSalary() {
-        if (Employee.counter > 0) {
-            return calculateTotalSalary() / Employee.counter;
-        } else {
-            return 0;
+    private static Employee[] findEmployeesOnDepartment(Employee[] employees, int department) {
+        int countEmployees = 0;
+        for (Employee employee : employees) {
+            if (employee != null && employee.getDepartment() == department) {
+                countEmployees++;
+            }
         }
+        Employee[] result = new Employee[countEmployees];
+        for (Employee employee : employees) {
+            if (employee != null && employee.getDepartment() == department) {
+                result[--countEmployees] = employee;
+            }
+        }
+        return result;
     }
 
-    private static Employee findMinSalaryEmployee() {
-        if (Employee.counter > 0) {
-            int j = 0;
-            while (j < employees.length) {
-                if (employees[j] != null) break;
-                j++;
+    private static int calculateAvgSalary(Employee[] employees) {
+        int countEmployees = 0;
+        for (Employee employee : employees) {
+            if (employee != null) {
+                countEmployees++;
             }
-            for (int i = j+1; i < employees.length; i++) {
-                if (employees[i] != null) {
-                    if (employees[j].getSalary() > employees[i].getSalary()) j = i;
-                }
-            }
-            if (j < employees.length) {
-                return employees[j];
-            } else {
-                return null;
-            }
-        } else {
-            return null;
         }
+        if (countEmployees > 0) {
+            return calculateTotalSalary(employees) / countEmployees;
+        }
+        return 0;
     }
 
-    private static Employee findMaxSalaryEmployee() {
-        if (Employee.counter > 0) {
-            int j = 0;
-            while (j < employees.length) {
-                if (employees[j] != null) break;
-                j++;
+    public static Employee findMaxSalaryEmployee(Employee[] employees) {
+        Employee result = null;
+        int maxSalary = Integer.MIN_VALUE;
+        for (Employee employee : employees) {
+            if (employee != null && employee.getSalary() > maxSalary) {
+                maxSalary = employee.getSalary();
+                result = employee;
             }
-            for (int i = j+1; i < employees.length; i++) {
-                if (employees[i] != null) {
-                    if (employees[j].getSalary() < employees[i].getSalary()) j = i;
-                }
-            }
-            if (j < employees.length) {
-                return employees[j];
-            } else {
-                return null;
-            }
-        } else {
-            return null;
         }
+        return result;
     }
 
-    private static int calculateTotalSalary() {
+    public static Employee findMinSalaryEmployee(Employee[] employees) {
+        Employee result = null;
+        int minSalary = Integer.MAX_VALUE;
+        for (Employee employee : employees) {
+            if (employee != null && employee.getSalary() < minSalary) {
+                minSalary = employee.getSalary();
+                result = employee;
+            }
+        }
+        return result;
+    }
+
+    private static int calculateTotalSalary(Employee[] employees) {
         int totalSalary = 0;
-        for (int i = 1; i <= 5 ; i++) {
-            totalSalary += calculateTotalSalary(i);
+        for (Employee employee : employees) {
+            if (employee != null) {
+                totalSalary += employee.getSalary();
+            }
         }
         return totalSalary;
     }
 
-    private static void printNames() {
+    private static void printNames(Employee[] employees) {
         for (Employee employee : employees) {
             if (employee != null) {
                 System.out.println(employee.getName());
@@ -106,7 +113,7 @@ public class CourseWork1Hard {
         }
     }
 
-    private static void printData() {
+    private static void printData(Employee[] employees) {
         System.out.println("Сотрудники:");
         for (Employee employee : employees) {
             if (employee != null) {
@@ -115,7 +122,7 @@ public class CourseWork1Hard {
         }
     }
 
-    private static String toString(Employee[] employees){
+    private static String toString(Employee[] employees) {
         String data = "";
         for (Employee employee : employees) {
             if (employee != null) {
@@ -159,91 +166,21 @@ public class CourseWork1Hard {
         return employeesLessSalary;
     }
 
-    private static void indexSalary(int percent) {
+    private static void indexSalary(int percent, Employee[] employees) {
         for (Employee employee : employees) {
             if (employee != null) {
-                employee.setSalary(employee.getSalary()*(100+percent)/100);
+                employee.setSalary(employee.getSalary() * (100 + percent) / 100);
             }
         }
     }
 
-    private static String getData(int department) {
+    private static String getData(Employee[] employees) {
         String data = "";
         for (Employee employee : employees) {
-            if (employee != null && employee.getDepartment() == department) {
+            if (employee != null) {
                 data = data + "Employee{name='" + employee.getName() + "', salary=" + employee.getSalary() + ", id=" + employee.getId() + "}\n";
             }
         }
         return data;
-    }
-
-    private static int calculateAvgSalary(int department) {
-        int countEmployeesOnDepartment = 0;
-        for (Employee employee : employees) {
-            if (employee != null && employee.getDepartment() == department) {
-                countEmployeesOnDepartment++;
-            }
-        }
-        if (countEmployeesOnDepartment > 0) {
-            return calculateTotalSalary(department) / countEmployeesOnDepartment;
-        } else {
-            return 0;
-        }
-    }
-
-    private static int calculateTotalSalary(int department) {
-        int totalSalary = 0;
-        for (Employee employee : employees) {
-            if (employee != null && employee.getDepartment() == department) {
-                totalSalary += employee.getSalary();
-            }
-        }
-        return totalSalary;
-    }
-
-    private static Employee findMaxSalaryEmployee(int department) {
-        if (Employee.counter > 0) {
-            int j = 0;
-            while (j < employees.length) {
-                if (employees[j] != null && employees[j].getDepartment() == department) break;
-                j++;
-            }
-            if (j == employees.length) return null;
-            for (int i = j+1; i < employees.length; i++) {
-                if (employees[i] != null && employees[i].getDepartment() == department) {
-                    if (employees[j].getSalary() < employees[i].getSalary()) j = i;
-                }
-            }
-            return employees[j];
-        } else {
-            return null;
-        }
-    }
-
-    private static Employee findMinSalaryEmployee(int department) {
-        if (Employee.counter > 0) {
-            int j = 0;
-            while (j < employees.length) {
-                if (employees[j] != null && employees[j].getDepartment() == department) break;
-                j++;
-            }
-            if (j == employees.length) return null;
-            for (int i = j+1; i < employees.length; i++) {
-                if (employees[i] != null && employees[i].getDepartment() == department) {
-                    if (employees[j].getSalary() > employees[i].getSalary()) j = i;
-                }
-            }
-            return employees[j];
-        } else {
-            return null;
-        }
-    }
-
-    private static void indexSalary(int percent, int department) {
-        for (Employee employee : employees) {
-            if (employee != null && employee.getDepartment() == department) {
-                employee.setSalary(employee.getSalary()*(100+percent)/100);
-            }
-        }
     }
 }
